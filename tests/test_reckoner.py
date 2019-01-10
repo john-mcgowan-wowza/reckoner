@@ -268,8 +268,16 @@ class TestCourse(TestBase):
         self.assertIsInstance(self.c.repositories, list)
 
     def test_minimum_version(self):
+        """
+        Tests that the test_course.yml throws a MinimumVersionException when running _compare_required_versions.
+        Does not work for testing helm version because local_development is on.
+        Version in test_course.yml is set to 100.1.0, so this should always throw an exception.
+
+        Right now, trying to do self.c.minimum_versions['reckoner'] = test_reckoner_version breaks this test, so don't.
+
+        TODO: Implement a testing strategy that doesn't require local_dev to be enabled, such as KIND
+        """
         self.configure_subprocess_mock(test_helm_version_return_string, '', 0)
-        self.c.minimum_versions['reckoner'] = test_reckoner_version
         self.assertRaises(MinimumVersionException, self.c._compare_required_versions)
 
     def test_plot_course(self):
